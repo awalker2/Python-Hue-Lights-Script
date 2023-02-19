@@ -2,10 +2,7 @@ import requests
 import argparse
 import json
 import time
-import os
 
-bridge_ip = os.getenv("HUE_BRIDGE_IP")
-user_id = os.getenv("HUE_USER_ID")
 # 30 Matches the step of the official Hue switch
 brightness_step = 30
 
@@ -14,15 +11,15 @@ parser = argparse.ArgumentParser(
         description = 'Turns A List of Lights by ID on/off or raises/lowers the brightness',
         epilog = 'Text at the bottom of help')
 
-parser.add_argument('-a', '--action',help='Action= toggle, brighter, dimmer', required=True)
-parser.add_argument(
-    '-l', '--lights',  # either of this switches
-    type=json.loads,        # /parameters/ are ints
-    default=[]      # since we're not specifying required.
-)
+parser.add_argument('-a', '--action', help='Action= toggle, brighter, dimmer', required=True)
+parser.add_argument('-l', '--lights', help='List of lights in format [1,2,3]', type=json.loads, required=True)
+parser.add_argument('-i', '--ip', help='IP Address of Hub', required=True)
+parser.add_argument('-u', '--user', help='User ID for the Hub', required=True)
 args = parser.parse_args()
 action = args.action
 light_ids = args.lights
+bridge_ip = args.ip
+user_id = args.user
 
 session = requests.session()
 session.verify = False
